@@ -1,3 +1,4 @@
+import { storageConfigured } from "./quote/storage";
 export function deliveryAvailable() {
   const e = process.env;
   return (
@@ -5,3 +6,4 @@ export function deliveryAvailable() {
     Boolean(e.RESEND_API_KEY && e.LEAD_FROM && e.LEAD_RECIPIENT)
   );
 }
+export function quoteDeliveryAvailable() { return deliveryAvailable() && storageConfigured(); }

@@ -7,7 +7,7 @@ import ts from "typescript";
 // is started during tests, and every provider call uses an injected fake.
 const output = resolve(".sites-runtime/unit-tests");
 mkdirSync(output, { recursive: true });
-for (const name of ["site", "inquiry", "inquiry-server", "request-origin", "quote/questions", "quote/schema", "quote/summary", "quote/estimate", "quote/server"]) {
+for (const name of ["site", "inquiry", "inquiry-server", "request-origin", "quote/questions", "quote/schema", "quote/summary", "quote/types", "quote/pricing", "quote/server", "quote/storage", "quote/session", "quote/uploads", "quote/body", "quote/estimate-token", "quote/lead-schema", "quote/lead-server", "quote/analytics"]) {
   const source = readFileSync(`lib/${name}.ts`, "utf8");
   const compiled = ts
     .transpileModule(source, {
@@ -16,7 +16,7 @@ for (const name of ["site", "inquiry", "inquiry-server", "request-origin", "quot
         module: ts.ModuleKind.CommonJS,
       },
     })
-    .outputText.replace(
+    .outputText.replace(/require\("server-only"\);/g, "").replace(
       /require\("(\.\.?\/[^\"]+)"\)/g,
       'require("$1.cjs")',
     );
@@ -25,7 +25,7 @@ for (const name of ["site", "inquiry", "inquiry-server", "request-origin", "quot
 }
 const result = spawnSync(
   process.execPath,
-  ["--test", "tests/inquiry.test.mjs", "tests/quote.test.mjs"],
+  ["--test", "tests/inquiry.test.mjs", "tests/quote.test.mjs", "tests/quote-pipeline.test.mjs"],
   {
     stdio: "inherit",
     env: { ...process.env, YOB_TEST_MODULE: `${output}/inquiry-server.cjs` },

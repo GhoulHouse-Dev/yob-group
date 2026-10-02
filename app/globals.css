@@ -585,6 +585,9 @@ h3 {
 .quote-summary .quote-description { white-space: pre-wrap; }
 .quote-price { border-left: 3px solid #b6232d; padding: 4px 0 4px 16px; margin: 0 0 24px; font-size: .875rem; }
 .quote-price p { margin: 6px 0 0; color: #59625f; }
+.quote-price .quote-price-amount { color: #202523; font-size: 1.65rem; font-weight: 650; overflow-wrap: anywhere; }
+.quote-calculator .field { min-width: 0; }
+.quote-calculator input[type="file"] { max-width: 100%; min-width: 0; }
 .quote-files { list-style: none; margin: 12px 0 0; padding: 0; }
 .quote-files li { display: flex; gap: 12px; align-items: center; justify-content: space-between; font-size: .8rem; }
 .quote-files span { overflow-wrap: anywhere; min-width: 0; }

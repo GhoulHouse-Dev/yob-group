@@ -32,7 +32,7 @@ Ennen aktivointia hyväksy vastaanottaja, käsittelyperuste, tietosuojateksti, s
 
 Lomake rajoittaa liitteet kolmeen tiedostoon ja 3 Mt:n yhteiskokoon. Yksittäisen tiedoston raja on 3 Mt. Palvelin lukee enintään 3,5 Mt:n multipart-rungon; näin myös lomakkeen metatiedoille jää tilaa Vercelin 4,5 MB:n Function-rajan sisällä. Rajat ovat teknisiä, eivät asiakkaan palvelulupauksia. [Vercel Functions -rajat](https://vercel.com/docs/functions/limitations).
 
-Palvelu ei tallenna pyyntöjä omaan tietokantaan. Viestien säilytys tapahtuu vastaanottajan sähköpostissa ja palveluntarjoajan ehdoilla, jotka tulee vahvistaa tietosuojaselosteeseen.
+Vanha kohdearviolomake välittää pyynnöt sähköpostiin. Uusi tarjouslaskuri tallentaa koko tarjouspyynnön yksityiseen objektitallennukseen ennen sähköpostivälitystä ja edellyttää lisäasetuksia. Liitteet lähetetään erillisessä upload-vaiheessa. Asetukset, kuittaukset ja mittaus: [quote-calculator.md](quote-calculator.md). Tallennus ja säilytys vahvistetaan tietosuojaselosteeseen ennen aktivointia.
 
 ## Varsinainen yrityssivusto
 

@@ -17,6 +17,12 @@ export default function Privacy() {
           Lähetysrajapinta ei esikatselussa välitä yhteydenottoa YOB:lle eikä
           tallenna lomakkeen sisältöä.
         </p>
+        <p>
+          Tarjouslaskurin palvelu-, kohde- ja mittatiedot käsitellään
+          arviointirajapinnassa myös esikatselussa. Yhteystietoja ja kuvia ei
+          lähetetä tässä tilassa. Euromääräistä arviota ei lasketa ilman
+          vahvistettua hinnastoa.
+        </p>
         <h2>Suorat yhteydenotot</h2>
         <p>
           Puhelin- ja sähköpostilinkit avaavat laitteen puhelin- tai
@@ -24,7 +30,9 @@ export default function Privacy() {
         </p>
         <h2>Seuranta</h2>
         <p>
-          Sivustoon ei ole lisätty analytiikka- tai markkinointipalveluita.
+          Ulkopuolista analytiikka- tai markkinointipalvelua ei ole lisätty.
+          Laskurin oma tapahtumamittaus on oletuksena pois käytöstä. Mahdollinen
+          aktivointi ja tapahtumatietojen säilytys hyväksytään ennen käyttöönottoa.
         </p>
         <h2>Ennen lomakkeen käyttöönottoa</h2>
         <p>

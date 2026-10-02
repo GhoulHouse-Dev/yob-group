@@ -48,8 +48,8 @@ test("estimate never returns fictional euro amounts and rejects submitted prices
   const response = await handleQuoteEstimate(estimateRequest(quote()));
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.estimate.kind, "quote_only");
-  assert.equal(body.estimate.reason, "no_tariff");
+  assert.equal(body.estimate.status, "manual_quote");
+  assert.equal(body.estimate.reason, "unsupported_scope");
   assert.equal("minCents" in body.estimate, false);
   assert.equal((await handleQuoteEstimate(estimateRequest({ ...quote(), price: 1 }))).status, 422);
 });

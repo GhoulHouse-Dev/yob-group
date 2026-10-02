@@ -3,7 +3,7 @@ import { services } from "./site";
 import { validRequestedDate } from "./quote/schema";
 const text = (max: number) =>
   z.string().trim().max(max, "Teksti on liian pitkä.");
-export const inquirySchema = z
+export const inquiryFields = z
   .object({
     name: text(100).min(1, "Kirjoita nimesi."),
     phone: text(40).refine(
@@ -28,8 +28,8 @@ export const inquirySchema = z
     preferredContact: z.enum(["email", "phone"]).optional(),
     quoteDetails: text(12000).optional(),
     website: text(100).refine((v) => v === "", "Pyyntöä ei voitu lähettää."),
-  })
-  .superRefine((v, ctx) => {
+  });
+export const inquirySchema = inquiryFields.superRefine((v, ctx) => {
     if (v.preferredContact === "email" && !v.email)
       ctx.addIssue({ code: "custom", path: ["email"], message: "Anna sähköpostiosoite valitsemaasi yhteydenottoa varten." });
     if (v.preferredContact === "phone" && !v.phone)
