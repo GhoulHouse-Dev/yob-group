@@ -1,4 +1,4 @@
-import { deliveryAvailable } from "@/lib/delivery-config";
+import { deliveryAvailable, quoteDeliveryAvailable } from "@/lib/delivery-config";
 import Link from "next/link";
 import { ServiceCards, Steps, ContactCards } from "@/components/site-content";
 import { InquiryForm } from "@/components/inquiry-form";
@@ -80,7 +80,7 @@ export default function Home() {
             <a className="text-link" href="tel:+358453509738">Voit myös soittaa: 045 3509 738</a>
             <Link className="text-link" href="/tarjouspyynto">Avaa laskuri omalle sivulle</Link>
           </div>
-          <QuoteCalculator enabled={deliveryAvailable()} />
+          <QuoteCalculator enabled={quoteDeliveryAvailable()} analyticsEnabled={process.env.QUOTE_ANALYTICS_ENABLED === "true"} />
         </div>
       </section>
       <section className="problem-section">

@@ -111,7 +111,7 @@ export async function handleInquiry(
     "",
     v.description,
     ...(v.preferredContact ? [`Toivottu yhteydenotto: ${v.preferredContact === "email" ? "sähköpostilla" : "puhelimitse"}`] : []),
-    ...(quoteSummary ? ["", "TARJOUSPYYNTÖLASKURIN TIEDOT", quoteSummary] : []),
+    ...(quoteSummary ? ["", "TARJOUSPYYNTÖLASKURIN TIEDOT", quoteSummary, "Hinta: kohdekohtainen tarjous. Euromääräistä arviota ei ole laskettu."] : []),
   ].join("\n");
   const attachments = await Promise.all(
     files.map(async (f) => ({

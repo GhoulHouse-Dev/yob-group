@@ -13,6 +13,5 @@ export function formatQuoteSummary(quote: QuoteDetails): string {
         : typeof v === "number" ? `${v.toLocaleString("fi-FI")}${f.unit ? ` ${f.unit}` : ""}` : String(v);
       return `${f.label}: ${text}`;
     }),
-    "Hinta: kohdekohtainen tarjous. Euromääräistä arviota ei ole laskettu.",
   ].join("\n");
 }

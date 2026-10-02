@@ -54,7 +54,7 @@ GitHub Actions suorittaa samat neljä vaihetta pull requesteissa ja `main`-haara
 
 Lähetys on oletuksena pois päältä. Lomake näyttää esikatselutilan, ja rajapinta palauttaa `503`, ellei kaikkia lähetysasetuksia ole määritetty. Puhelin- ja sähköpostilinkit toimivat ilman lähetysintegraatiota.
 
-Muuttujat ovat `.env.example`-tiedostossa. Resend edellyttää vahvistettua lähettäjädomainia. Vahvista vastaanottaja ja henkilötietojen käsittely ennen avaimen asentamista. Älä koskaan lisää avaimia GitHubiin. Liiteraja on 3 Mt yhteensä, jotta pyyntö mahtuu Vercelin Function-rajapinnan kokorajaan. Aktivointiohje: [docs/deployment.md](docs/deployment.md).
+Muuttujat ovat `.env.example`-tiedostossa. Resend edellyttää vahvistettua lähettäjädomainia. Vahvista vastaanottaja ja henkilötietojen käsittely ennen avaimen asentamista. Älä koskaan lisää avaimia GitHubiin. Liiteraja on 3 Mt yhteensä. Uusi viisivaiheinen tarjouslaskuri hakee arvion palvelimelta, käyttää erillistä uploadia ja tallentaa liidin ennen välitystä; se vaatii myös yksityisen tallennuksen asetukset. [Laskurin arkkitehtuuri ja aktivointi](docs/quote-calculator.md). Aktivointiohje: [docs/deployment.md](docs/deployment.md).
 
 ## Sisältö ja kuvat
 

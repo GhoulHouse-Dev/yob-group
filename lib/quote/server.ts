@@ -1,7 +1,8 @@
 import { quoteSchema } from "./schema";
-import { estimateQuote } from "./estimate";
+import { estimateQuote } from "./pricing";
 import { isSameOrigin } from "../request-origin";
-export async function handleQuoteEstimate(request: Request) {
+import { issueEstimateToken } from "./estimate-token";
+export async function handleQuoteEstimate(request: Request, secret = process.env.QUOTE_SESSION_SECRET) {
   const respond = (body: unknown, status = 200) => Response.json(body, {
     status, headers: { "Cache-Control": "no-store" },
   });
@@ -25,7 +26,8 @@ export async function handleQuoteEstimate(request: Request) {
     text += decoder.decode();
     const result = quoteSchema.safeParse(JSON.parse(text));
     if (!result.success) return respond({ ok: false, message: "Tarkista kohteen tiedot." }, 422);
-    return respond({ ok: true, estimate: estimateQuote(result.data) });
+    const estimate = estimateQuote(result.data);
+    return respond({ ok: true, estimate, ...(secret ? { estimateToken: issueEstimateToken(result.data, estimate, secret) } : {}) });
   } catch {
     return respond({ ok: false, message: "Tarkista kohteen tiedot." }, 422);
   } finally { reader.releaseLock(); }
