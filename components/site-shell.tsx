@@ -14,6 +14,7 @@ const navigation = [
   { href: "/palvelut", label: "Palvelut" },
   { href: "/yritys", label: "Yritys" },
   { href: "/yhteys", label: "Yhteystiedot" },
+  { href: "/tarjouspyynto", label: "Tarjouslaskuri" },
 ];
 export function Header() {
   const path = usePathname();
@@ -40,8 +41,8 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
-          <Link className="button header-cta" href="/yhteys#kohdearvio">
-            Pyydä kohdearvio
+          <Link className="button header-cta" href="/tarjouspyynto">
+            Pyydä tarjous
           </Link>
           <Sheet>
             <SheetTrigger asChild>
@@ -81,8 +82,8 @@ export function Header() {
                 ))}
               </nav>
               <SheetClose asChild>
-                <Link className="button" href="/yhteys#kohdearvio">
-                  Pyydä kohdearvio
+                <Link className="button" href="/tarjouspyynto">
+                  Pyydä tarjous
                 </Link>
               </SheetClose>
             </SheetContent>

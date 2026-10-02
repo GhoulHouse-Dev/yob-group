@@ -1,5 +1,8 @@
 import { inquirySchema, attachmentError } from "./inquiry";
 import { services } from "./site";
+import { quoteSchema } from "./quote/schema";
+import { formatQuoteSummary } from "./quote/summary";
+import { isSameOrigin } from "./request-origin";
 export type DeliveryConfig = {
   enabled: boolean;
   apiKey?: string;
@@ -50,8 +53,7 @@ export async function handleInquiry(
   config: DeliveryConfig,
   transport: typeof fetch = fetch,
 ): Promise<Response> {
-  const origin = request.headers.get("origin");
-  if (!origin || origin !== new URL(request.url).origin)
+  if (!isSameOrigin(request))
     return reply(403, "Pyyntöä ei voitu lähettää.");
   if (!config.enabled || !config.apiKey || !config.from || !config.to)
     return reply(
@@ -85,6 +87,17 @@ export async function handleInquiry(
   if (fileError)
     return reply(422, fileError, { errors: { attachments: fileError } });
   const v = parsed.data;
+  let quoteSummary = "";
+  if (v.quoteDetails !== undefined) {
+    try {
+      const quote = quoteSchema.safeParse(JSON.parse(v.quoteDetails));
+      if (!quote.success || quote.data.service !== v.service)
+        return reply(422, "Tarkista laskurin lähtötiedot.", { errors: { quoteDetails: "Laskurin tiedot eivät vastaa valittua palvelua." } });
+      quoteSummary = formatQuoteSummary(quote.data);
+    } catch {
+      return reply(422, "Tarkista laskurin lähtötiedot.", { errors: { quoteDetails: "Laskurin tietoja ei voitu käsitellä." } });
+    }
+  }
   const service =
     services.find((s) => s.slug === v.service)?.title ?? "En tiedä vielä";
   const message = [
@@ -97,6 +110,8 @@ export async function handleInquiry(
     `Toivottu ajankohta: ${v.date || "-"}`,
     "",
     v.description,
+    ...(v.preferredContact ? [`Toivottu yhteydenotto: ${v.preferredContact === "email" ? "sähköpostilla" : "puhelimitse"}`] : []),
+    ...(quoteSummary ? ["", "TARJOUSPYYNTÖLASKURIN TIEDOT", quoteSummary] : []),
   ].join("\n");
   const attachments = await Promise.all(
     files.map(async (f) => ({

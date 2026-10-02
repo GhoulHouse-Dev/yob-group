@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
 import { spawnSync } from "node:child_process";
 import ts from "typescript";
 
@@ -7,7 +7,7 @@ import ts from "typescript";
 // is started during tests, and every provider call uses an injected fake.
 const output = resolve(".sites-runtime/unit-tests");
 mkdirSync(output, { recursive: true });
-for (const name of ["site", "inquiry", "inquiry-server"]) {
+for (const name of ["site", "inquiry", "inquiry-server", "request-origin", "quote/questions", "quote/schema", "quote/summary", "quote/estimate", "quote/server"]) {
   const source = readFileSync(`lib/${name}.ts`, "utf8");
   const compiled = ts
     .transpileModule(source, {
@@ -17,14 +17,15 @@ for (const name of ["site", "inquiry", "inquiry-server"]) {
       },
     })
     .outputText.replace(
-      /require\("\.\/(site|inquiry)"\)/g,
-      'require("./$1.cjs")',
+      /require\("(\.\.?\/[^\"]+)"\)/g,
+      'require("$1.cjs")',
     );
+  mkdirSync(dirname(`${output}/${name}.cjs`), { recursive: true });
   writeFileSync(`${output}/${name}.cjs`, compiled);
 }
 const result = spawnSync(
   process.execPath,
-  ["--test", "tests/inquiry.test.mjs"],
+  ["--test", "tests/inquiry.test.mjs", "tests/quote.test.mjs"],
   {
     stdio: "inherit",
     env: { ...process.env, YOB_TEST_MODULE: `${output}/inquiry-server.cjs` },

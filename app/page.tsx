@@ -2,6 +2,7 @@ import { deliveryAvailable } from "@/lib/delivery-config";
 import Link from "next/link";
 import { ServiceCards, Steps, ContactCards } from "@/components/site-content";
 import { InquiryForm } from "@/components/inquiry-form";
+import { QuoteCalculator } from "@/components/quote-calculator";
 export default function Home() {
   return (
     <main id="sisalto">
@@ -15,8 +16,8 @@ export default function Home() {
             Injektointi, vedeneristys ja rakennekorjaukset. Kerro kohteestasi ja
             korjaustarpeesta.
           </p>
-          <Link href="/yhteys#kohdearvio" className="button">
-            Pyydä kohdearvio
+          <Link href="#tarjouslaskuri" className="button">
+            Pyydä tarjous
           </Link>
           <p className="hero-note">
             Sopivaa korjausmenetelmää ei tarvitse tietää etukäteen.
@@ -67,6 +68,19 @@ export default function Home() {
               Katso kaikki palvelut
             </Link>
           </div>
+        </div>
+      </section>
+      <section className="section quote-section" id="tarjouslaskuri">
+        <div className="container quote-layout">
+          <div className="quote-intro">
+            <span className="eyebrow">TARJOUSPYYNTÖLASKURI</span>
+            <h2>Valitse työ.<br />Kerro kohteesta.</h2>
+            <p>Vastaa kohteesi lähtötietoja koskeviin kysymyksiin. Laskuri kokoaa tiedot tarjouspyyntöä varten.</p>
+            <p>Et tarvitse valmista suunnitelmaa tai tarkkoja mittoja. Työn sisältö ja hinta vahvistetaan kohdekohtaisessa tarjouksessa.</p>
+            <a className="text-link" href="tel:+358453509738">Voit myös soittaa: 045 3509 738</a>
+            <Link className="text-link" href="/tarjouspyynto">Avaa laskuri omalle sivulle</Link>
+          </div>
+          <QuoteCalculator enabled={deliveryAvailable()} />
         </div>
       </section>
       <section className="problem-section">
