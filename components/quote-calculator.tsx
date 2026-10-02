@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, useLayoutEffect, type FormEvent } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { ArrowLeft, ArrowRight, Check, Paperclip } from "lucide-react";
 import { services } from "@/lib/site";
@@ -45,6 +45,13 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
   const errorRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const requestRef = useRef<{ signature: string; key: string } | null>(null);
+  const [focusRequest, setFocusRequest] = useState<{ target: "heading" | "error" | "contact" } | null>(null);
+  useLayoutEffect(() => {
+    const target = focusRequest?.target === "heading" ? headingRef.current
+      : focusRequest?.target === "error" ? errorRef.current
+      : focusRequest?.target === "contact" ? document.getElementById(`quote-${instance}-name`) : null;
+    target?.focus();
+  }, [focusRequest, instance]);
   const id = (key: string) => `quote-${instance}-${key.replaceAll(".", "-")}`;
   const Heading = instance === "page" ? "h2" : "h3";
   const quoteInput = (v: Values) => ({ service: v.service, propertyType: v.propertyType,
@@ -62,11 +69,11 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
   function move(next: number) {
     setStep(next); setErrors({}); setMessage("");
     if (next < 4) { setEstimate(null); setEstimateToken(""); setContactVisible(false); }
-    requestAnimationFrame(() => headingRef.current?.focus());
+    setFocusRequest({ target: "heading" });
   }
   function report(next: Record<string, string>) {
     setErrors(next); setMessage("");
-    requestAnimationFrame(() => errorRef.current?.focus());
+    setFocusRequest({ target: "error" });
   }
   function validateStep(): boolean {
     const v = getValues(); const next: Record<string, string> = {};
@@ -115,7 +122,7 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
       move(4);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Käsittely epäonnistui. Yritä uudelleen.");
-      requestAnimationFrame(() => errorRef.current?.focus());
+      setFocusRequest({ target: "error" });
     } finally { setStatus("idle"); }
   }
   function selectService(service: string) {
@@ -156,7 +163,7 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
     event.preventDefault();
     if (busy) return;
     if (step < 4) { next(); return; }
-    if (!contactVisible) { setContactVisible(true); track("quote_contact_started", 5); requestAnimationFrame(() => document.getElementById(id("name"))?.focus()); return; }
+    if (!contactVisible) { setContactVisible(true); track("quote_contact_started", 5); setFocusRequest({ target: "contact" }); return; }
     const v = getValues(); const nextErrors: Record<string, string> = {};
     const result = quoteSchema.safeParse(quoteInput(v));
     if (!result.success) { report({ quote: "Tarkista kohteen tiedot palaamalla aiempiin vaiheisiin." }); return; }
@@ -168,7 +175,7 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
     setErrors({});
     if (!enabled) {
       setMessage("Tarjouspyyntö tarkistettu. Tämä on esikatselu: tietojasi ei ole lähetetty YOB:lle. Ota yhteyttä puhelimitse tai sähköpostilla.");
-      requestAnimationFrame(() => errorRef.current?.focus()); return;
+      setFocusRequest({ target: "error" }); return;
     }
     if (!estimate || !estimateToken || attachmentRefs.length !== files.length) {
       report({ quote: "Palaa kuvavaiheeseen ja hae arvio uudelleen." }); return;
@@ -185,13 +192,13 @@ export function QuoteCalculator({ enabled = false, instance = "home", analyticsE
       if (!response.ok || !body.ok) {
         setStatus("idle"); setErrors(body.errors ?? {});
         setMessage(body.message ?? "Lähetys epäonnistui. Tietosi ovat edelleen lomakkeella.");
-        requestAnimationFrame(() => errorRef.current?.focus()); return;
+        setFocusRequest({ target: "error" }); return;
       }
       track("quote_step_completed", 5); track("quote_submitted", 5);
       setStatus("success"); router.push("/kiitos");
     } catch {
       setStatus("idle"); setMessage("Lähetys epäonnistui. Tietosi ovat edelleen lomakkeella. Yritä uudelleen tai ota yhteyttä puhelimitse tai sähköpostilla.");
-      requestAnimationFrame(() => errorRef.current?.focus());
+      setFocusRequest({ target: "error" });
     }
   }
   if (status === "success") return <div className="quote-complete" role="status">

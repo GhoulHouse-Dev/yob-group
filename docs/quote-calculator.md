@@ -126,4 +126,27 @@ testit läpäisivät etusivun ja laskurisivun, manuaalisen arvion, suljetun JSON
 lähetyksen/uploadin/analytiikan sekä kuittausevästeettömän kiitossivun.
 Selaintesti jäi tekemättä: paikallinen Chromium puuttui, ja Playwrightin
 lataus palautti kelvottoman/tyhjän paketin. 320/390/768/1440 px -hyväksyntää
-ei ole väitetty läpäistyksi. Muutos pidetään luonnos-PR:nä tähän tarkistukseen asti.
+ei väitetty tuossa vaiheessa läpäistyksi. PR #9 on sittemmin yhdistetty main-haaraan.
+
+## Jatkuva selaintarkistus
+
+GitHub CI asentaa tilapäiseen hakemistoon Playwright 1.62.1:n ja Chromiumin
+sekä suorittaa `scripts/quote-browser-test.mjs` tuotantokäännöstä vasten.
+Sivuston riippuvuuksia tai tuotantopalveluita ei muuteta testiä varten.
+
+Testi käy 72 polkua (etusivu ja laskurisivu × neljä näyttöleveyttä × kahdeksan
+palveluvalintaa ja erillinen timanttiporaus). Mukana ovat pakolliset kentät,
+desimaalimitta, kaikki viisi vaihetta, arvion näyttäminen ennen yhteystietoja,
+esikatselun lähetysesto, tapahtumat, vaakavieritys, leikkautuvat kentät ja
+mobiilinavigaatio. Leveydet ajetaan rinnakkaisissa selainkonteksteissa.
+
+Ensimmäinen CI-selaintesti löysi viivästetyn kohdistuksen aiheuttaman virheen:
+nimikenttään siirtyminen saattoi keskeyttää sähköpostikentän täytön.
+Kohdistus tehdään nyt DOM-päivityksen yhteydessä layout effectissä. Testi
+tarkistaa myös kummankin yhteystietokentän arvon ennen lopullista tarkistusta.
+
+CI-artifact `quote-browser-qa` sisältää kuvakaappaukset, polkukohtaisen
+`results.json`-raportin ja testipalvelimen lokin seitsemän päivän ajan.
+Ajokohtainen hyväksyntätulos näkyy GitHub Actionsissa. Testi käyttää vain
+testitietoja ja lähetys on aina suljettu. Oikean tallennus- ja sähköpostipalvelun
+koko polku sekä Vercel-julkaisu ovat edelleen erillisiä käyttöönoton tehtäviä.

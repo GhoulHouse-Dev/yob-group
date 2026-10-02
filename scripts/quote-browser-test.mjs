@@ -14,7 +14,7 @@ const server = spawn(process.execPath, ["node_modules/next/dist/bin/next", "star
   env: { ...process.env, LEAD_INTAKE_ENABLED: "false", QUOTE_ANALYTICS_ENABLED: "false" },
 });
 let browser;
-let currentPage;
+
 let serverLog = "";
 server.stdout.on("data", (data) => { serverLog += data.toString(); });
 server.stderr.on("data", (data) => { serverLog += data.toString(); });
@@ -89,6 +89,8 @@ async function journey(page, path, service, width, drilling = false) {
     await form.getByRole("button", { name: "Pyydä tarkka tarjous", exact: true }).click();
     await form.getByLabel("Nimi *", { exact: true }).fill("Testihenkilö");
     await form.getByLabel("Sähköposti *", { exact: true }).fill("test@example.com");
+    assert.equal(await form.getByLabel("Nimi *", { exact: true }).inputValue(), "Testihenkilö");
+    assert.equal(await form.getByLabel("Sähköposti *", { exact: true }).inputValue(), "test@example.com");
     await fits(page, `${width} ${path} ${service} contacts`);
     await form.getByRole("button", { name: "Tarkista tarjouspyyntö", exact: true }).click();
     await form.getByRole("alert").filter({ hasText: "tietojasi ei ole lähetetty YOB:lle" }).waitFor();
@@ -113,13 +115,14 @@ try {
   await mkdir(output, { recursive: true });
   await startup();
   browser = await chromium.launch({ headless: true });
-  for (const width of [320, 390, 768, 1440]) {
+  const widthRuns = await Promise.allSettled([320, 390, 768, 1440].map(async (width) => {
     const context = await browser.newContext({ viewport: { width, height: 900 } });
     await context.addInitScript(() => {
       window.__yobTestEvents = [];
       window.addEventListener("yob:quote", (e) => window.__yobTestEvents.push(e.detail));
     });
-    currentPage = await context.newPage();
+    const currentPage = await context.newPage();
+    try {
     for (const path of ["/", "/tarjouspyynto"]) {
       for (const service of services) await journey(currentPage, path, service, width);
       await journey(currentPage, path, "timanttityot", width, true);
@@ -135,11 +138,16 @@ try {
       await nav.waitFor({ state: "hidden" });
       await fits(currentPage, `${width} mobile navigation`);
     }
-    await context.close();
-  }
+    } catch (error) {
+      await currentPage.screenshot({ path: `${output}/failure-${width}.png`, fullPage: true }).catch(() => {});
+      await writeFile(`${output}/failure-${width}.txt`, await currentPage.locator(".quote-calculator").innerText().catch(() => "Page unavailable"));
+      throw error;
+    } finally { await context.close(); }
+  }));
+  const failures = widthRuns.filter((run) => run.status === "rejected");
+  if (failures.length) throw new AggregateError(failures.map((run) => run.reason), "Browser viewport QA failed");
   console.log(`Browser QA passed: ${results.length} journeys at 320/390/768/1440 px.`);
 } catch (error) {
-  if (currentPage && !currentPage.isClosed()) await currentPage.screenshot({ path: `${output}/failure.png`, fullPage: true }).catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
