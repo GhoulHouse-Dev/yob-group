@@ -35,7 +35,7 @@ pnpm test
 pnpm build
 ```
 
-GitHub Actions suorittaa samat neljä vaihetta pull requesteissa ja `main`-haaran muutoksissa. CI:llä on vain lähdekoodin lukuoikeus eikä se julkaise tuotantoon. Lomakkeen testit käyttävät korvattua palveluntarjoajaa; oikeita sähköposteja ei lähetetä.
+GitHub Actions suorittaa samat neljä vaihetta sekä 72 laskuripolun Chromium-tarkistuksen koissa 320, 390, 768 ja 1440 px pull requesteissa ja `main`-haaran muutoksissa. CI:llä on vain lähdekoodin lukuoikeus eikä se julkaise tuotantoon. Lomakkeen testit käyttävät korvattua palveluntarjoajaa; oikeita sähköposteja ei lähetetä.
 
 ## Rakenne
 
