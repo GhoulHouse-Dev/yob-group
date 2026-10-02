@@ -539,6 +539,75 @@ h3 {
 .inquiry-form {
   min-width: 0;
 }
+.quote-section { background: #f4f3f0; }
+.quote-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 64px; align-items: start; }
+.quote-intro { padding-top: 24px; }
+.quote-intro h2 { font-size: 3rem; }
+.quote-intro p { color: #59625f; max-width: 370px; }
+.quote-intro .text-link { display: flex; width: fit-content; }
+.quote-calculator { min-width: 0; background: #fff; border: 1px solid #cdd2ce; border-radius: 12px; padding: 32px; }
+.quote-content { border: 0; padding: 0; margin: 0; min-width: 0; }
+.quote-page { max-width: 820px; }
+.quote-progress { display: flex; justify-content: space-between; gap: 12px; font-size: .875rem; font-weight: 600; color: #59625f; }
+.quote-step-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 0; margin: 12px 0 28px; list-style: none; }
+.quote-step-track li { height: 4px; border-radius: 2px; background: #e5e7e5; }
+.quote-step-track li.active { background: #b6232d; }
+.quote-step-title { font-size: 1.65rem; margin-bottom: 20px; }
+.quote-preview { font-size: .8rem; padding: 12px 14px; border-radius: 6px; background: #f4f3f0; color: #59625f; }
+.quote-service-fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+.quote-service-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quote-service-option { display: flex; gap: 10px; align-items: center; min-height: 76px; padding: 14px; border: 1px solid #cdd2ce; border-radius: 6px; font-size: .875rem; font-weight: 550; line-height: 1.4; cursor: pointer; }
+.quote-service-option input { accent-color: #b6232d; width: 18px; height: 18px; flex: none; }
+.quote-service-option span { flex: 1; }
+.quote-service-option.selected { background: #fcf3f3; border-color: #b6232d; }
+.quote-service-option svg { flex: none; color: #b6232d; }
+.quote-hint { color: #59625f; font-size: .875rem; margin: 18px 0 0; }
+.quote-calculator .form-grid > .full { grid-column: 1 / -1; }
+.quote-calculator .form-grid > .quote-hint { margin: 0; }
+.quote-calculator select { width: 100%; font: inherit; font-size: 1rem; min-height: 52px; padding: 12px 10px; border: 1px solid #707a75; border-radius: 6px; background: white; }
+.quote-calculator .field input:disabled { background: #f4f3f0; }
+.quote-calculator .quote-unknown { display: flex; gap: 8px; align-items: center; font-size: .8rem; margin: 6px 0 0; min-height: 36px; font-weight: 400; }
+.quote-calculator .quote-unknown input { width: 18px; height: 18px; min-height: 0; accent-color: #b6232d; padding: 0; }
+.quote-contact-choice { border: 0; margin: 0; padding: 0; font-size: .875rem; }
+.quote-contact-choice legend { font-weight: 600; margin-bottom: 8px; }
+.quote-contact-choice label { display: inline-flex; align-items: center; gap: 8px; margin-right: 20px; min-height: 44px; }
+.quote-contact-choice input { accent-color: #b6232d; width: 18px; height: 18px; }
+.quote-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 28px; }
+.quote-actions .button { gap: 8px; cursor: pointer; }
+.quote-actions .quote-back { background: white; color: #202523; border-color: #cdd2ce; margin-right: auto; }
+.quote-actions .quote-back:hover { background: #f4f3f0; }
+.quote-actions .button:disabled { opacity: .6; cursor: wait; }
+.quote-summary { background: #f4f3f0; padding: 20px; border-radius: 6px; margin-bottom: 18px; font-size: .875rem; }
+.quote-summary-heading { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.quote-summary-heading .text-link { border: 0; background: none; cursor: pointer; font-size: .8rem; }
+.quote-summary pre { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 14px; line-height: 1.7; }
+.quote-summary p { margin: 0 0 8px; overflow-wrap: anywhere; }
+.quote-summary .quote-description { white-space: pre-wrap; }
+.quote-price { border-left: 3px solid #b6232d; padding: 4px 0 4px 16px; margin: 0 0 24px; font-size: .875rem; }
+.quote-price p { margin: 6px 0 0; color: #59625f; }
+.quote-files { list-style: none; margin: 12px 0 0; padding: 0; }
+.quote-files li { display: flex; gap: 12px; align-items: center; justify-content: space-between; font-size: .8rem; }
+.quote-files span { overflow-wrap: anywhere; min-width: 0; }
+.quote-files button { flex: none; min-height: 44px; border: 0; background: none; color: #b6232d; cursor: pointer; text-decoration: underline; }
+.quote-complete { background: white; border: 1px solid #cdd2ce; border-radius: 12px; padding: 32px; }
+.quote-complete > svg { width: 36px; height: 36px; color: #b6232d; margin-bottom: 20px; }
+@media (max-width: 1050px) {
+  .quote-layout { grid-template-columns: 1fr; gap: 32px; }
+  .quote-intro p { max-width: 680px; }
+  .desktop-nav { display: none; }
+  .menu-trigger { display: inline-flex !important; min-height: 44px; height: auto !important; padding: 10px 14px !important; background: white; color: #202523; font-size: .875rem; }
+}
+@media (max-width: 600px) {
+  .quote-calculator { padding: 20px 16px; }
+  .quote-intro h2 { font-size: 2.25rem; }
+  .quote-service-options { grid-template-columns: 1fr; }
+  .quote-service-option { min-height: 58px; }
+  .quote-step-title { font-size: 1.4rem; }
+  .quote-actions { flex-wrap: wrap; }
+  .quote-actions .button { padding-inline: 16px; font-size: .875rem; }
+  .quote-summary { padding: 16px; }
+  .quote-summary-heading { align-items: flex-start; flex-wrap: wrap; gap: 0; }
+}
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
