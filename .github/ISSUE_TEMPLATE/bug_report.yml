@@ -1,0 +1,23 @@
+name: Virheraportti
+description: Ilmoita sivuston toimintaan liittyvä virhe.
+title: "[Virhe]: "
+body:
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Toistaminen
+      description: Sivun osoite, selaimen tiedot ja toistamisen vaiheet. Älä lisää henkilötietoja tai salaisuuksia.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Odotettu toiminta
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Toteutunut toiminta
+    validations:
+      required: true
