@@ -7,7 +7,7 @@ export default function Privacy() {
       <PageIntro
         eyebrow="TIETOSUOJA"
         title="Tietosuoja esikatselussa"
-        description="Tämä sivusto on yksityinen esikatselu. Lomakkeen viestinvälitys ei ole käytössä."
+        description="Tämä sivusto on esikatselu. Lomakkeen viestinvälitys ei ole käytössä."
       />
       <article className="container legal-copy">
         <h2>Lomakkeen tiedot</h2>
@@ -25,9 +25,8 @@ export default function Privacy() {
         <h2>Seuranta</h2>
         <p>
           Sivustoon ei ole lisätty analytiikka- tai markkinointipalveluita.
-          Sivuston yksityistä käyttöoikeutta hallinnoi esikatselupalvelu.
         </p>
-        <h2>Ennen julkista käyttöönottoa</h2>
+        <h2>Ennen lomakkeen käyttöönottoa</h2>
         <p>
           Rekisterinpitäjä, käsittelyperuste, vastaanottajat, säilytysajat sekä
           rekisteröidyn oikeuksien toteuttaminen: [puuttuu: selvitä

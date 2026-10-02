@@ -1,16 +1,21 @@
-# Käyttöönotto ja palautus
+# Vercel-käyttöönotto ja palautus
 
-## Nykyinen esikatselu
+## Nykyinen julkaisupohja
 
-Toteutus on Cloudflare Workers -yhteensopiva Sites-projekti. Julkaisu rakennetaan lukituista riippuvuuksista ja tallennetaan yksityiseksi versioksi. Nykyisen `yob.fi`-domainin DNS-asetuksia ei muuteta tässä toteutuksessa.
+GitHub-projekti käyttää Next.js:n Node.js-ajoympäristöä. `pnpm build` tekee Next.js-tuotantokäännöksen. Aiemman yksityisen Sites-esikatselun alustaohje on arkistoitu `platform.md`-tiedostoon. `yob.fi`-domainin DNS-asetuksia ei muuteta tätä Vercel-demojulkaisua varten.
 
-1. Valitse hyväksytty Git-commit ja varmista, että CI läpäisee.
-2. Aja `pnpm install --frozen-lockfile` ja neljä README:n tarkistusta.
-3. Rakenna alustan julkaisutyönkululla Worker-paketti. Rakennettu palvelinkonfiguraatio löytyy `dist/server/wrangler.json`-tiedostosta.
-4. Julkaise ensin yksityiseen esikatseluun. Tarkista jokainen sivu, palvelukohtainen yhteydenottopolku, 404 sekä lomakkeen virhetilat.
-5. Kirjaa käyttöön otettu commit, julkaisuversion tunniste, tarkistuspäivä ja vastuuhenkilö.
+## Projekti Verceliin
 
-Alustan yksityiskohtaiset kehitysohjeet ovat [platform.md](platform.md)-tiedostossa. GitHub Actions on tarkistusputki; automaattinen julkaisu ja sen tunnukset eivät ole vielä kytkettyjä.
+1. Tuo GitHubista `GhoulHouse-Dev/yob-group` käyttäjän hyväksymään Vercel-työtilaan.
+2. Projektin nimi: `yob-group`. Framework: Next.js. Root Directory: repositorion juuri.
+3. Node.js-versio: 24.x. `vercel.json` käyttää komentoja `pnpm install --frozen-lockfile` ja `pnpm build`.
+4. Jätä lomakkeen lähetys pois päältä. `.env.example` sisältää mahdolliset asetukset; mitään avaimia ei tarvita demon julkaisuun.
+5. Julkaise `main`-haaran tarkistettu commit. Vercel määrittää projektille `vercel.app`-osoitteen; lopullinen nimi vahvistetaan julkaisun tuloksesta.
+6. Varmista Ready-tila, etusivu, kaikki palvelusivut, yhteydenottopolku, 404 ja esikatselun 503-vastaus. Säilytä noindex demo- ja asiakashyväksyntävaiheessa.
+
+Vercelin alidomain ei vaadi oman domainin ostoa. Työtilan hosting-tilaus ja käyttörajat ovat erillinen asia; tämä toteutus ei muuta tilausta tai hanki maksullista domainia.
+
+GitHub Actions suorittaa TypeScriptin, ESLintin, testit ja Next.js-käännöksen. Vercelin Git-integraatio hoitaa julkaisut, kun repositorio on tuotu ja liitetty projektiin. GitHub Actions ei tarvitse Vercel-avainta tätä mallia varten.
 
 ## Lomakkeen aktivointi
 
@@ -21,22 +26,24 @@ Alustan yksityiskohtaiset kehitysohjeet ovat [platform.md](platform.md)-tiedosto
 | `LEAD_FROM` | Vahvistettuun lähettäjädomainiin kuuluva osoite |
 | `LEAD_RECIPIENT` | Asiakkaan hyväksymä vastaanottaja |
 
-Aseta muuttujat Worker-julkaisualustan asetuksiin, ei repositorioon. Paikallisessa Worker-testissä käytä gitignoreen kuuluvaa `.dev.vars`-tiedostoa; muut paikalliset ympäristöt käyttävät alustan määrittelemää `.env`-käytäntöä. `.env.example` on pelkkä mallipohja.
+Aseta muuttujat Vercelin projektin Environment Variables -asetuksiin. Salaisuusavaimet eivät kuulu GitHubiin. Paikallisessa Next.js-testissä käytä gitignoreen kuuluvaa `.env.local`-tiedostoa. Vercelin ympäristömuuttujamuutoksen jälkeen tarvitaan uusi julkaisu. Sivuilla näkyvä aktivointitila ja tietosuojateksti on päivitettävä samassa hyväksytyssä muutoksessa.
 
 Ennen aktivointia hyväksy vastaanottaja, käsittelyperuste, tietosuojateksti, säilytysaika ja palveluntarjoajat. Ota käyttöön pysyvä nopeusrajoitus ja bottisuoja julkaisualustalla. Asiakkaan hyväksymällä testivastaanottajalla tarkista yksi onnistunut lähetys, samaa tunnistetta käyttävä uudelleenyritys sekä lähetyspalvelun virhetilanne. Vahvista liitteiden toimitus. Vasta sen jälkeen muuta tuotannon aktivointiasetus.
 
-Lomake rajoittaa liitteet kolmeen tiedostoon, 5 Mt tiedostoa kohden ja 8 Mt yhteensä. Nämä ovat toteutuksen teknisiä rajoja; asiakkaan toimintatavan hyväksyntä puuttuu. Palvelu ei tallenna pyyntöjä omaan tietokantaan. Viestien säilytys tapahtuu vastaanottajan sähköpostissa ja palveluntarjoajan ehdoilla, jotka tulee vahvistaa tietosuojaselosteeseen.
+Lomake rajoittaa liitteet kolmeen tiedostoon ja 3 Mt:n yhteiskokoon. Yksittäisen tiedoston raja on 3 Mt. Palvelin lukee enintään 3,5 Mt:n multipart-rungon; näin myös lomakkeen metatiedoille jää tilaa Vercelin 4,5 MB:n Function-rajan sisällä. Rajat ovat teknisiä, eivät asiakkaan palvelulupauksia. [Vercel Functions -rajat](https://vercel.com/docs/functions/limitations).
 
-## Julkisen sivuston julkaisu
+Palvelu ei tallenna pyyntöjä omaan tietokantaan. Viestien säilytys tapahtuu vastaanottajan sähköpostissa ja palveluntarjoajan ehdoilla, jotka tulee vahvistaa tietosuojaselosteeseen.
 
-Hyväksy ensin [content-handover.md](content-handover.md). Vahvista hosting ja nykyisen sivuston siirtosuunnitelma. Lisää oikean domainin canonical-osoitteet, sitemap ja sosiaalisen jakamisen kuva. Poista vasta hyväksytystä julkisesta versiosta `app/layout.tsx`-tiedoston noindex-asetus ja `app/robots.ts`-tiedoston yleinen esto. Säilytä kiitos- ja sisäiset sivut indeksoinnin ulkopuolella.
+## Varsinainen yrityssivusto
 
-GitHubin asetuksissa suositeltu `main`-haaran suojaus: pull requestit ja pakollinen `Typecheck, lint, tests and build` -tarkistus, force-pushin ja haaran poiston esto. Vaatimus vähintään yhdestä hyväksyvästä katselmoinnista edellyttää toista nimettyä ylläpitäjää. Näitä repositorion palvelinasetuksia ei ole asetettu tämän koodimuutoksen mukana.
+Hyväksy ensin `content-handover.md`. Vahvista hosting ja nykyisen sivuston siirtosuunnitelma. Lisää oikean domainin canonical-osoitteet ja sitemap. Poista vasta hyväksytystä varsinaisesta sivustosta `app/layout.tsx`-tiedoston noindex-asetus ja `app/robots.ts`-tiedoston yleinen esto. Säilytä kiitos- ja sisäiset sivut indeksoinnin ulkopuolella.
+
+GitHubin asetuksissa suositeltu `main`-haaran suojaus: pull requestit ja pakollinen `Typecheck, lint, tests and build` -tarkistus, force-pushin ja haaran poiston esto. Vaatimus yhdestä hyväksyvästä katselmoinnista edellyttää toista nimettyä ylläpitäjää. Palvelinasetuksia ei ole asetettu koodimuutoksen mukana.
 
 ## Palautus
 
-Julkaise viimeinen toimivaksi kirjattu versio / commit uudelleen julkaisualustalla. Älä force-pushaa päähaaraa. Tarvittaessa sulje lomake heti muuttamalla `LEAD_INTAKE_ENABLED=false`; yhteystietolinkit jäävät käyttöön. Poista vaarantunut avain käytöstä palveluntarjoajalla ja korvaa se julkaisualustan salaisuutena. Tarkista palautuksen jälkeen etusivu, palvelusivu ja yhteydenotto.
+Palauta Vercelistä viimeinen toimiva Deployment tai julkaise toimivaksi kirjattu commit uudelleen. Älä force-pushaa päähaaraa. Tarvittaessa sulje lomake muuttamalla `LEAD_INTAKE_ENABLED=false` ja julkaisemalla muutos; yhteystietolinkit jäävät käyttöön. Poista vaarantunut avain käytöstä palveluntarjoajalla ja korvaa se Vercelin salaisuutena. Tarkista palautuksen jälkeen etusivu, palvelusivu ja yhteydenotto.
 
 ## WebMCP
 
-Tuetussa selaimessa `stage_kohdearviopyynto` voi validoida ja valmistella näkyvän lomakkeen. Työkalu ei lähetä viestiä. WebMCP on ehdotettu standardi ja tuki tunnistetaan käyttöhetkellä. Tuetun selainkontekstin toiminnallinen työkalutesti ei ollut saatavilla tässä toteutussessiossa; tavallinen lomake toimii ilman WebMCP:tä.
+Tuetussa selaimessa `stage_kohdearviopyynto` voi validoida ja valmistella näkyvän lomakkeen. Työkalu ei lähetä viestiä. Tuki tunnistetaan käyttöhetkellä. Tuetun selainkontekstin toiminnallinen työkalutesti ei ollut saatavilla toteutussessiossa; tavallinen lomake toimii ilman WebMCP:tä.

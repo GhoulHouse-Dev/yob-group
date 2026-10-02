@@ -41,8 +41,8 @@ export const acceptedTypes = [
   "image/webp",
   "application/pdf",
 ];
-export const maxFileSize = 5 * 1024 * 1024;
-export const maxTotalSize = 8 * 1024 * 1024;
+export const maxFileSize = 3 * 1024 * 1024;
+export const maxTotalSize = 3 * 1024 * 1024;
 export function attachmentError(
   files: {
     size: number;
@@ -51,10 +51,10 @@ export function attachmentError(
 ) {
   if (files.length > 3) return "Lisää enintään kolme liitettä.";
   if (files.some((f) => f.size > maxFileSize))
-    return "Yksittäisen liitteen kokoraja on 5 Mt.";
+    return "Yksittäisen liitteen kokoraja on 3 Mt.";
   if (files.some((f) => !acceptedTypes.includes(f.type)))
     return "Sallitut tiedostotyypit ovat JPG, PNG, WebP ja PDF.";
   if (files.reduce((a, f) => a + f.size, 0) > maxTotalSize)
-    return "Liitteiden yhteiskokoraja on 8 Mt.";
+    return "Liitteiden yhteiskokoraja on 3 Mt.";
   return null;
 }

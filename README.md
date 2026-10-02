@@ -2,17 +2,17 @@
 
 Suomenkielinen, responsiivinen verkkosivusto rakenteiden korjaus-, tiivistys- ja vahvistamispalveluille. Toteutus sisältää etusivun, palveluhakemiston, seitsemän palvelusivua, yrityssivun, yhteystiedot ja tietosuojasivun.
 
-**Tila:** tekninen toteutus ja yksityinen esikatselu. Julkisen käyttöönoton sisältöhyväksynnät ja lomakkeen lähetysasetukset ovat vielä avoinna. Hakukoneindeksointi on tarkoituksella estetty. Tietosuojateksti on luonnos, ei valmis rekisteriseloste.
+**Tila:** Vercel-julkaisua varten valmisteltu esikatselu. Varsinaisen yrityssivuston sisältöhyväksynnät ja lomakkeen lähetysasetukset ovat vielä avoinna. Hakukoneindeksointi on tarkoituksella estetty. Tietosuojateksti on luonnos, ei valmis rekisteriseloste.
 
 ## Teknologia
 
 - React 19, TypeScript ja Next.js App Router -rajapinnat
-- Vinext / Vite sekä Cloudflare Workers -julkaisuympäristö
+- Next.js:n Node.js-ajoympäristö sekä Vercel-julkaisu
 - Paikallinen Inter-fontti ja pakatut WebP-kuvat
 - Zod-validointi selaimessa ja palvelimella
 - Resend-lähetysrajapinta, joka aktivoidaan vain asetuksilla
 
-Vinext-riippuvuus on tällä hetkellä beta-versio. Lukitut versiot ja CI takaavat toistettavan käännöksen; beta-ajoympäristön tuotantohyväksyntä ja ylläpitovastuu tulee sopia ennen julkista siirtoa. Toteutus ei sellaisenaan käytä Vercelin Next.js-julkaisua.
+Oletuskomennot käyttävät Next.js:ää ja sopivat suoraan Verceliin. Aiemman yksityisen Sites-esikatselun Vinext-käännös on säilytetty erillisillä `dev:sites`-, `build:sites`- ja `start:sites`-komennoilla. Vercel-julkaisu ei käytä beta-ajoympäristöä.
 
 ## Käynnistys
 
@@ -24,7 +24,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Käytä kehityspalvelimen tulostamaa paikallista osoitetta. `.openai/hosting.json` sisältää esikatseluprojektin tunnisteen; tiedosto ei sisällä salaisuuksia. Julkaiseminen tähän esikatseluprojektiin edellyttää sen omistajan valtuutusta. Siirrettäessä toiseen ympäristöön määritä uusi projekti erikseen.
+Käytä kehityspalvelimen tulostamaa paikallista osoitetta. `vercel.json` määrittää Next.js-käännöksen ja lukitun asennuksen. `.openai/hosting.json` kuuluu aiempaan yksityiseen esikatseluun; Vercel ei käytä sitä.
 
 ## Tarkistukset
 
@@ -54,7 +54,7 @@ GitHub Actions suorittaa samat neljä vaihetta pull requesteissa ja `main`-haara
 
 Lähetys on oletuksena pois päältä. Lomake näyttää esikatselutilan, ja rajapinta palauttaa `503`, ellei kaikkia lähetysasetuksia ole määritetty. Puhelin- ja sähköpostilinkit toimivat ilman lähetysintegraatiota.
 
-Muuttujat ovat `.env.example`-tiedostossa. Resend edellyttää vahvistettua lähettäjädomainia. Vahvista vastaanottaja ja henkilötietojen käsittely ennen avaimen asentamista. Älä koskaan lisää avaimia GitHubiin. Aktivointiohje: [docs/deployment.md](docs/deployment.md).
+Muuttujat ovat `.env.example`-tiedostossa. Resend edellyttää vahvistettua lähettäjädomainia. Vahvista vastaanottaja ja henkilötietojen käsittely ennen avaimen asentamista. Älä koskaan lisää avaimia GitHubiin. Liiteraja on 3 Mt yhteensä, jotta pyyntö mahtuu Vercelin Function-rajapinnan kokorajaan. Aktivointiohje: [docs/deployment.md](docs/deployment.md).
 
 ## Sisältö ja kuvat
 

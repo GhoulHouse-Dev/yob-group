@@ -1,0 +1,9 @@
+.git
+.next
+node_modules
+.sites-runtime
+.wrangler
+dist
+.env*
+!.env.example
+.dev.vars*

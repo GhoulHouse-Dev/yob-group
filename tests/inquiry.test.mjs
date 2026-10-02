@@ -119,7 +119,7 @@ test("attachments reject excessive count, size and disallowed types", async () =
   for (const files of [
     Array.from({ length: 4 }, png),
     [
-      new File([new Uint8Array(5 * 1024 * 1024 + 1)], "big.pdf", {
+      new File([new Uint8Array(3 * 1024 * 1024 + 1)], "big.pdf", {
         type: "application/pdf",
       }),
     ],
@@ -200,4 +200,17 @@ test("malformed idempotency key is rejected", async () => {
     ).status,
     400,
   );
+});
+test("combined attachment size above 3 MiB is rejected below the request body limit", async () => {
+  const files = [1, 2].map(
+    (i) =>
+      new File(
+        [new Uint8Array(Math.ceil(1.6 * 1024 * 1024))],
+        `test-${i}.pdf`,
+        { type: "application/pdf" },
+      ),
+  );
+  const res = await handleInquiry(request({}, files), enabled, forbiddenTransport);
+  assert.equal(res.status, 422);
+  assert.match((await res.json()).errors.attachments, /3 Mt/);
 });

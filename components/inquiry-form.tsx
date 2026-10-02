@@ -276,8 +276,8 @@ export function InquiryForm({
               }}
             />
             <small id={id("attachments") + "-help"}>
-              Vapaaehtoinen. JPG, PNG, WebP tai PDF. Enintään 3 tiedostoa, 5 Mt
-              / tiedosto ja 8 Mt yhteensä.
+              Vapaaehtoinen. JPG, PNG, WebP tai PDF. Enintään 3 tiedostoa, 3 Mt
+              / tiedosto ja 3 Mt yhteensä.
             </small>
             {files.length > 0 && (
               <ul className="file-list">

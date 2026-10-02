@@ -6,7 +6,7 @@ export type DeliveryConfig = {
   from?: string;
   to?: string;
 };
-const MAX_BODY = 9 * 1024 * 1024;
+const MAX_BODY = 3.5 * 1024 * 1024;
 const reply = (
   status: number,
   message: string,
@@ -61,7 +61,7 @@ export async function handleInquiry(
   if (!request.headers.get("content-type")?.startsWith("multipart/form-data"))
     return reply(415, "Tarkista lomakkeen lähetysmuoto.");
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY)
-    return reply(413, "Liitteiden yhteiskokoraja on 8 Mt.");
+    return reply(413, "Liitteiden yhteiskokoraja on 3 Mt.");
   let data: FormData;
   try {
     data = await readLimited(request);

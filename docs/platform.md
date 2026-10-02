@@ -1,3 +1,5 @@
+> Arkistoitu tekninen ohje aiemmalle Sites/Vinext-esikatselulle. Vercelin nykyinen julkaisuohje on `deployment.md`. Tämän tiedoston vanhat oletuskomennot ovat nykyisessä projektissa `dev:sites`, `build:sites` ja `start:sites`.
+
 # vinext-starter
 
 A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
